@@ -1,9 +1,10 @@
-export interface Pathed {
+export interface Pathed<T> {
     name: string;
     path: string[]; // path segments
+    value: T;
 }
 
-export interface Note extends Pathed {
+export interface Note {
     type: NoteType;
     content: string;
     lastModified: number; // numerical timestamp
@@ -21,6 +22,6 @@ export enum NoteType {
     DEFINITION
 }
 
-export interface Folder extends Pathed {
-    children: (Folder | Note)[];
+export interface Folder {
+    children: Pathed<(Folder | Note)>[];
 }
