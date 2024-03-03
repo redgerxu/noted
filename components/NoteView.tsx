@@ -4,7 +4,6 @@ import { FolderContext, FolderContextType, RootStackParamList } from "@/App";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { update } from "@/extra/db";
 import { Folder, Note, Pathed } from "@/extra/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type NoteViewRouteProp = RouteProp<RootStackParamList, "note">;
 

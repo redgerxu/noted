@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FolderStuff from "./components/FolderStuff";
 import Flashcards from "./components/Flashcards";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // weird navigation types and context stuff
 
@@ -54,7 +55,7 @@ export default function App() {
  * @returns root folder as Folder object
  */
 export async function loadData(): Promise<Pathed<Folder>> {
-  const sData = undefined; //await AsyncStorage.getItem("data");
+  const sData = await AsyncStorage.getItem("data");
 
   if (sData) {
     return JSON.parse(sData) as Pathed<Folder>;
