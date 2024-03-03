@@ -32,22 +32,29 @@ export function update(
 
 export function create(
   rootContext: FolderContextType,
+  current: Pathed<Folder>,
   path: string[],
   value: Pathed<Folder | Note>
-): Pathed<Folder> | undefined {
-  if (!rootContext.rootFolder) return;
-  for (let i = 0; i < rootContext.rootFolder.value.children.length; i++) {
-    if (rootContext.rootFolder.value.children[i].name === path[0]) {
-      if (path.length > 1) {
-        if (rootContext.rootFolder.value.children[i] as Pathed<Folder>) {
-          return create(rootContext, path.slice(1), value);
+): number {
+  if (!rootContext.rootFolder) return -1;
+
+  if (path.length > 1) {
+    for (let i = 0; i < current.value.children.length; i++) {
+      if (current.value.children[i].name === path[0]) {
+        if (current.value.children[i] as Pathed<Folder>) {
+          return create(
+            rootContext,
+            current.value.children[i] as Pathed<Folder>,
+            path.slice(1),
+            value
+          );
         }
-      } else {
-        const { rootFolder } = rootContext;
-        rootFolder.value.children[i] = value;
-        rootContext.updateRoot(rootFolder);
-        return rootFolder;
       }
     }
+  } else {
+    current.value.children.push(value);
+    return 0;
   }
+
+  return -1;
 }
