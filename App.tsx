@@ -1,11 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
-import { Folder, Note, Pathed } from "./types";
-import { DefaultRoot } from "./globals";
+import { Folder, Note, Pathed } from "@/extra/types";
+import { DefaultRoot } from "@/extra/globals";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FolderView from "./components/FolderScreen";
-import NoteView from "./components/NoteView";
+import FolderView from "@/components/FolderScreen";
+import NoteView from "@/components/NoteView";
 
 export type RootStackParamList = {
   folderview: undefined;
@@ -53,7 +52,7 @@ export default function App() {
  * @returns root folder as Folder object
  */
 async function loadData(): Promise<Pathed<Folder>> {
-  const sData = await AsyncStorage.getItem("data");
+  const sData = undefined; //await AsyncStorage.getItem("data");
 
   if (sData) {
     return JSON.parse(sData) as Pathed<Folder>;

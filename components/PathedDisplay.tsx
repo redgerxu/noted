@@ -1,7 +1,13 @@
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  View,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Pathed, Folder, Note } from "../types";
+import { Pathed, Folder, Note } from "../extra/types";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -14,32 +20,38 @@ export default function PathedDisplay({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const renderChild = (item: Pathed<Folder | Note>) => {
+    return <PathedDisplay props={item} key={item.path.join("/")} />;
+  };
+
   if (props.value && (props.value as Folder).children !== undefined) {
     return (
-      <TouchableOpacity
-        style={[styles.container, styles.shifted]}
-        onPress={() => {}}
+      <View
+        style={
+          props.path.length === 1
+            ? [styles.container]
+            : [styles.padLeft, styles.container]
+        }
       >
-        <Ionicons
-          style={{ paddingRight: 4 }}
-          name="folder-open"
-          size={30}
-          color="blue"
-        />
-        <Text>{props.name}</Text>
-        <View style={styles.childrenContainer}>
-          {((props.value as Folder).children ?? []).map(
-            (child: Pathed<Folder | Note>) => (
-              <PathedDisplay props={child} key={child.path.join("/")} />
-            )
-          )}
+        <View style={styles.element}>
+          <Ionicons
+            style={{ paddingRight: 4 }}
+            name="folder-open"
+            size={30}
+            color="blue"
+          />
+          <Text>{props.displayName}</Text>
         </View>
-      </TouchableOpacity>
+
+        <SafeAreaView>
+          {(props.value as Folder).children.map((child) => renderChild(child))}
+        </SafeAreaView>
+      </View>
     );
-  } else if (props.value && (props.value as Note).definitions !== undefined) {
+  } else if (props.value && (props.value as Note).content !== undefined) {
     return (
       <TouchableOpacity
-        style={[styles.container, styles.shifted]}
+        style={[styles.padLeft, styles.note]}
         onPress={() => {
           navigation.navigate("note", { note: props as Pathed<Note> });
         }}
@@ -50,7 +62,7 @@ export default function PathedDisplay({
           size={30}
           color="blue"
         />
-        <Text>{props.name}</Text>
+        <Text>{props.displayName}</Text>
       </TouchableOpacity>
     );
   }
@@ -59,22 +71,22 @@ export default function PathedDisplay({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 10,
+  padLeft: {
+    paddingLeft: 30,
+  },
+  element: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 2,
     alignSelf: "flex-start",
+    width: "100%",
+    borderWidth: 1,
   },
-  shifted: {
-    position: "relative",
-    top: 20,
-  },
-  childrenContainer: {
-    flex: 1,
-    display: "flex",
+  container: {
     flexDirection: "column",
+  },
+  note: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
   },
 });

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
-import { FolderContext, FolderContextType, RootStackParamList } from "../App";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { update } from "../db";
-import { Folder, Note, Pathed } from "../types";
+import { FolderContext, FolderContextType, RootStackParamList } from "@/App";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { update } from "@/extra/db";
+import { Folder, Note, Pathed } from "@/extra/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type NoteViewRouteProp = RouteProp<RootStackParamList, "note">;
@@ -14,15 +14,15 @@ export default function NoteView() {
   const route = useRoute<NoteViewRouteProp>();
   const { note } = route.params;
   const [text, setText] = useState(note.value.content ?? "");
+  const [saved, setSaved] = useState(true);
 
   useEffect(() => {
-    console.log("BRUH");
-
     const autoSave = setInterval(() => {
-      if (root?.rootFolder) {
+      if (root?.rootFolder && !saved) {
         save(root, note, text);
         saveData(root.rootFolder);
         console.log("saved asdf");
+        setSaved(true);
       }
     }, 1000);
 
@@ -36,7 +36,7 @@ export default function NoteView() {
         value={text}
         onChangeText={(newText) => {
           setText(newText);
-          console.log(root?.rootFolder.value.children[0].value);
+          setSaved(false);
         }}
         style={styles.textinput}
       />

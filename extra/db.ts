@@ -1,4 +1,4 @@
-import { FolderContextType } from "./App";
+import { FolderContextType } from "@/App";
 import { Pathed, Folder, Note } from "./types";
 
 export function update(

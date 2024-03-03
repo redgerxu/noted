@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { StyleSheet, ScrollView } from "react-native";
-import { FolderContext } from "../App";
+import { Text, StyleSheet, ScrollView } from "react-native";
+import { FolderContext } from "@/App";
 import PathedDisplay from "./PathedDisplay";
 
 export default function FolderView() {
@@ -9,6 +9,7 @@ export default function FolderView() {
   if (state?.rootFolder)
     return (
       <ScrollView contentContainerStyle={styles.container}>
+        <Text style={{ fontSize: 20, fontWeight: "bold" }}>Folders</Text>
         <PathedDisplay props={state?.rootFolder} />
       </ScrollView>
     );
@@ -20,7 +21,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     flexDirection: "column",
-    alignItems: "flex-start",
-    alignSelf: "flex-start",
+    padding: 8,
   },
 });
