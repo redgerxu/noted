@@ -80,6 +80,5 @@ const save = (root: FolderContextType, note: Pathed<Note>, text: string) => {
 };
 
 async function saveData(root: Pathed<Folder>): Promise<void> {
-  await AsyncStorage.setItem("data", JSON.stringify(root));
   console.log(JSON.stringify(root));
 }

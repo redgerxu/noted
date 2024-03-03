@@ -20,20 +20,14 @@ export default function Flashcards() {
 
     const str = JSON.stringify(rootContext.rootFolder);
 
-    console.log(str);
-
     const regex = /Definition:\s*\S+\s*-\s[^\s"]+?/g;
 
     const matches = str.match(regex) ?? [];
-
-    console.log(matches);
 
     for (const match of matches) {
       const temp = extract(match);
       if (temp) setFlashcards([...flashcards, temp]);
     }
-
-    console.log(flashcards);
   }, []);
 
   return (
