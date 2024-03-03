@@ -1,27 +1,64 @@
-import { DefaultRoot } from "@/extra/globals";
-import React, { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { FolderContext } from "@/App";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import Flashcard from "./Flashcard";
+
+const extract = (text: string) => {
+  const regex = /^Definition:\s*(\S+)\s*-\s*(\S+)$/;
+
+  const match = text.match(regex);
+
+  return match ? [match[1], match[2]] : [];
+};
 
 export default function Flashcards() {
-  const [rootFolder] = useState(DefaultRoot);
-  const [flashcards, setFlashcards] = useState([]);
+  const rootContext = useContext(FolderContext);
+  const [flashcards, setFlashcards] = useState<string[][]>([]);
 
   useEffect(() => {
-    const str = JSON.stringify(rootFolder);
+    if (!rootContext?.rootFolder) return;
+
+    const str = JSON.stringify(rootContext.rootFolder);
 
     console.log(str);
 
-    const regex = /Definition:\s*(\S+)\s*-\s*(\S+)/g;
+    const regex = /Definition:\s*\S+\s*-\s[^\s"]+?/g;
 
-    let match;
-    while ((match = regex.exec(JSON.stringify(rootFolder))) !== null) {
-      const value1 = match[1];
-      const value2 = match[2];
+    const matches = str.match(regex) ?? [];
 
-      console.log("Value 1:", value1);
-      console.log("Value 2:", value2);
+    console.log(matches);
+
+    for (const match of matches) {
+      const temp = extract(match);
+      if (temp) setFlashcards([...flashcards, temp]);
     }
+
+    console.log(flashcards);
   }, []);
 
-  return <Text>hi</Text>;
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {flashcards.map(([front, back], index) => (
+        <Flashcard front={front} back={back} key={index} />
+      ))}
+      <View style={styles.cardContainer}></View>
+    </ScrollView>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "lightgray",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+  },
+  cardContainer: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    padding: 8,
+  },
+});

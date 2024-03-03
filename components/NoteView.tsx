@@ -20,7 +20,6 @@ export default function NoteView() {
     const autoSave = setInterval(() => {
       if (root?.rootFolder && !saved) {
         save(root, note, text);
-        console.log("saved asdf");
         setSaved(true);
       }
     }, 1000);

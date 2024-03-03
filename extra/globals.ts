@@ -18,18 +18,6 @@ export const DefaultRoot: Pathed<Folder> = {
   path: [""],
   displayName: "Noted",
   value: {
-    children: [
-      {
-        name: "temp",
-        path: ["", "root", "temp"],
-        displayName: "Temp",
-        value: {
-          children: [
-            { ...WelcomeNote, path: ["", "root", "temp", "welcome.note"] },
-          ],
-        },
-      },
-      WelcomeNote,
-    ],
+    children: [WelcomeNote],
   },
 };
