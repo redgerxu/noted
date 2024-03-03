@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FolderView from "@/components/FolderScreen";
 import NoteView from "@/components/NoteView";
 
+// weird navigation types and context stuff
+
 export type RootStackParamList = {
   folderview: undefined;
   note: { note: Pathed<Note> };

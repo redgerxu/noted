@@ -1,5 +1,7 @@
 import { Folder, Note, NoteType, Pathed } from "./types";
 
+// global values (kind of just filler data)
+
 const WelcomeNote: Pathed<Note> = {
   name: "welcome.note",
   path: ["", "root", "welcome.note"],

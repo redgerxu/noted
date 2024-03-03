@@ -3,6 +3,8 @@ import { Text, StyleSheet, ScrollView } from "react-native";
 import { FolderContext } from "@/App";
 import PathedDisplay from "./PathedDisplay";
 
+// entry point of recursive patheddisplay element
+
 export default function FolderView() {
   const state = useContext(FolderContext);
 

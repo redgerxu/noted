@@ -20,7 +20,6 @@ export default function NoteView() {
     const autoSave = setInterval(() => {
       if (root?.rootFolder && !saved) {
         save(root, note, text);
-        saveData(root.rootFolder);
         console.log("saved asdf");
         setSaved(true);
       }
@@ -68,12 +67,16 @@ const styles = StyleSheet.create({
 
 const save = (root: FolderContextType, note: Pathed<Note>, text: string) => {
   if (root?.rootFolder) {
-    const res = update(root, note.path.slice(2), {
+    let copy = JSON.parse(JSON.stringify(root.rootFolder)) as Pathed<Folder>;
+
+    const res = update(root, copy, note.path.slice(2), {
       ...note,
       value: { ...note.value, content: text },
     });
 
-    if (res) root.updateRoot(res);
+    if (res === 0) root.updateRoot(copy);
+
+    saveData(copy);
   }
 };
 
