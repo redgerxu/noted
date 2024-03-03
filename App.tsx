@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StatusBar } from "expo-status-bar";
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Folder, Note, Pathed } from "./types";
 import { DefaultRoot } from "./globals";
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,21 +13,27 @@ export type RootStackParamList = {
 };
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export const FolderContext = createContext(DefaultRoot);
+export type FolderContextType = {
+  rootFolder: Pathed<Folder>;
+  updateRoot: React.Dispatch<React.SetStateAction<Pathed<Folder>>>;
+};
+
+export const FolderContext = createContext<FolderContextType | undefined>(
+  undefined
+);
 
 export default function App() {
-  let rootFolder = DefaultRoot;
+  const [rootFolder, updateRoot] = useState(DefaultRoot);
 
   useEffect(() => {
     async function load() {
-      rootFolder = await loadData();
+      updateRoot(await loadData());
     }
 
     load();
   }, []);
-
   return (
-    <FolderContext.Provider value={rootFolder}>
+    <FolderContext.Provider value={{ rootFolder, updateRoot }}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="folderview">
           <Stack.Screen
@@ -49,13 +54,10 @@ export default function App() {
  */
 async function loadData(): Promise<Pathed<Folder>> {
   const sData = await AsyncStorage.getItem("data");
+
   if (sData) {
     return JSON.parse(sData) as Pathed<Folder>;
   } else {
     return DefaultRoot;
   }
-}
-
-async function saveData(root: Pathed<Folder>): Promise<void> {
-  await AsyncStorage.setItem("data", JSON.stringify(root));
 }

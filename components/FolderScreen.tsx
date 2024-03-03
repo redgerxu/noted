@@ -1,16 +1,18 @@
 import React, { useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { FolderContext } from "../App";
 import PathedDisplay from "./PathedDisplay";
 
-export default function FolderView({ navigation }: { navigation: any }) {
+export default function FolderView() {
   const state = useContext(FolderContext);
 
-  return (
-    <View style={styles.container}>
-      <PathedDisplay navigation={navigation} props={state} />
-    </View>
-  );
+  if (state?.rootFolder)
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <PathedDisplay props={state?.rootFolder} />
+      </ScrollView>
+    );
+  return <></>;
 }
 
 const styles = StyleSheet.create({

@@ -2,30 +2,35 @@ import React from "react";
 import { Text, StyleSheet, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pathed, Folder, Note } from "../types";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function PathedDisplay({
-  navigation,
   props,
 }: {
-  navigation: any;
   props: Pathed<Folder | Note>;
 }) {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   if (props.value && (props.value as Folder).children !== undefined) {
     return (
       <TouchableOpacity
         style={[styles.container, styles.shifted]}
         onPress={() => {}}
       >
-        <Ionicons name="folder-open" size={30} color="blue" />
+        <Ionicons
+          style={{ paddingRight: 4 }}
+          name="folder-open"
+          size={30}
+          color="blue"
+        />
         <Text>{props.name}</Text>
         <View style={styles.childrenContainer}>
           {((props.value as Folder).children ?? []).map(
             (child: Pathed<Folder | Note>) => (
-              <PathedDisplay
-                navigation={navigation}
-                props={child}
-                key={child.path.join("/")}
-              />
+              <PathedDisplay props={child} key={child.path.join("/")} />
             )
           )}
         </View>
@@ -36,10 +41,15 @@ export default function PathedDisplay({
       <TouchableOpacity
         style={[styles.container, styles.shifted]}
         onPress={() => {
-          navigation.navigate("note", { note: props });
+          navigation.navigate("note", { note: props as Pathed<Note> });
         }}
       >
-        <Ionicons name="document-text" size={30} color="blue" />
+        <Ionicons
+          style={{ paddingRight: 4 }}
+          name="document-text"
+          size={30}
+          color="blue"
+        />
         <Text>{props.name}</Text>
       </TouchableOpacity>
     );
