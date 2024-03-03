@@ -23,6 +23,8 @@ export const FolderContext = createContext<FolderContextType | undefined>(
   undefined
 );
 
+const headerStyle = { backgroundColor: "#3333ff" };
+
 export default function App() {
   const [rootFolder, updateRoot] = useState(DefaultRoot);
 
@@ -40,9 +42,13 @@ export default function App() {
           <Stack.Screen
             name="folderview"
             component={FolderView}
-            options={{ title: "Notes" }}
+            options={{ title: "Noted", headerStyle: headerStyle }}
           />
-          <Stack.Screen name="note" component={NoteView} />
+          <Stack.Screen
+            name="note"
+            component={NoteView}
+            options={{ title: "Notes", headerStyle: headerStyle }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </FolderContext.Provider>

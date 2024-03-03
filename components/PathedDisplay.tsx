@@ -43,6 +43,8 @@ export default function PathedDisplay({
     } else {
       const newName = name.replace(/^\s+|\s+$|\s+/g, "");
 
+      if (newName.length === 0) return;
+
       setName("");
 
       const id = Math.floor(Math.random() * 10 ** 15).toString();
@@ -88,79 +90,101 @@ export default function PathedDisplay({
         }
       }
     }
+  };
 
-    if (props.value && (props.value as Folder).children !== undefined) {
-      return (
-        <TouchableOpacity
-          style={
-            props.path.length === 1
-              ? [styles.container]
-              : [styles.padLeft, styles.container]
-          }
-          onPress={() => setRendering(!renderChildren)}
-        >
-          <View style={styles.element}>
-            <Ionicons
-              style={{ paddingRight: 4 }}
-              name="folder-open"
-              size={30}
-              color="blue"
-            />
-            <Text>{props.displayName}</Text>
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                right: 0,
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "flex-start",
-              }}
-            >
-              <AntDesign name="plus" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-
-          {renderChildren && (
-            <SafeAreaView>
-              {(props.value as Folder).children.map((child) =>
-                renderChild(child)
-              )}
-              {editing && (
-                <TextInput
-                  style={{
-                    marginLeft: 30,
-                    borderColor: "#000000",
-                    borderBottomWidth: 1,
-                    paddingLeft: 2,
-                  }}
-                  onChangeText={(text) => setName(text)}
-                  value={name}
-                />
-              )}
-            </SafeAreaView>
-          )}
-        </TouchableOpacity>
-      );
-    } else if (props.value && (props.value as Note).content !== undefined) {
-      return (
-        <TouchableOpacity
-          style={[styles.padLeft, styles.note]}
-          onPress={() => {
-            navigation.navigate("note", { note: props as Pathed<Note> });
-          }}
-        >
+  if (props.value && (props.value as Folder).children !== undefined) {
+    return (
+      <TouchableOpacity
+        style={
+          props.path.length === 1
+            ? [styles.container]
+            : [styles.padLeft, styles.container]
+        }
+        onPress={() => setRendering(!renderChildren)}
+      >
+        <View style={styles.element}>
           <Ionicons
             style={{ paddingRight: 4 }}
-            name="document-text"
+            name="folder-open"
             size={30}
             color="blue"
           />
           <Text>{props.displayName}</Text>
-        </TouchableOpacity>
-      );
-    }
-  };
+          <View
+            style={{
+              position: "absolute",
+              right: 0,
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                if (createMode === 0 && editing) {
+                  createFunc();
+                }
+                setCreateMode(0);
+                setEditing(true);
+                if (!renderChildren) setRendering(true);
+              }}
+            >
+              <AntDesign name="addfolder" size={20} color="gray" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (createMode === 1 && editing) {
+                  createFunc();
+                }
+                setCreateMode(1);
+                setEditing(true);
+                if (!renderChildren) setRendering(true);
+              }}
+            >
+              <AntDesign name="addfile" size={20} color="gray" />
+            </TouchableOpacity>
+          </View>
+        </View>
 
+        {renderChildren && (
+          <SafeAreaView>
+            {(props.value as Folder).children.map((child) =>
+              renderChild(child)
+            )}
+            {editing && (
+              <TextInput
+                style={{
+                  marginLeft: 30,
+                  borderColor: "#000000",
+                  borderBottomWidth: 1,
+                  paddingLeft: 2,
+                }}
+                onChangeText={(text) => setName(text)}
+                value={name}
+              />
+            )}
+          </SafeAreaView>
+        )}
+      </TouchableOpacity>
+    );
+  } else if (props.value && (props.value as Note).content !== undefined) {
+    return (
+      <TouchableOpacity
+        style={[styles.padLeft, styles.note]}
+        onPress={() => {
+          navigation.navigate("note", { note: props as Pathed<Note> });
+        }}
+      >
+        <Ionicons
+          style={{ paddingRight: 4 }}
+          name="document-text"
+          size={30}
+          color="blue"
+        />
+        <Text>{props.displayName}</Text>
+      </TouchableOpacity>
+    );
+  }
   return <></>;
 }
 
